@@ -1,0 +1,33 @@
+:root {
+  color-scheme: light;
+  font-family: "Baloo 2", "Comic Sans MS", cursive;
+  background: #0b1b3a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  background: #0b1b3a;
+}
+
+#app {
+  display: block;
+  align-items: initial;
+  justify-content: initial;
+}
+
+canvas {
+  display: block;
+  image-rendering: auto;
+}
