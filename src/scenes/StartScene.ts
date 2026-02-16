@@ -106,6 +106,9 @@ export class StartScene extends Phaser.Scene {
     });
 
     // Listen for SPACE
+    // NOTE(logic risk): this uses this.input.keyboard! (non-null assertion). If the keyboard input plugin is
+    // disabled or not initialized, it may be null at runtime and crash. A safer approach is to null-check here
+    // or ensure keyboard input is enabled in the game config.
     this.input.keyboard!.once('keydown-SPACE', () => {
       this.scene.start('GameScene');
     });
