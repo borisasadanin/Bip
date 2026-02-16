@@ -1,10 +1,12 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
-import { join, extname } from 'node:path';
+import { join, extname, dirname } from 'node:path';
 import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 8080;
-const DIST = join(process.cwd(), 'dist');
+const DIST = join(__dirname, 'dist');
 
 const MIME = {
   '.html': 'text/html',
@@ -24,6 +26,9 @@ const server = createServer(async (req, res) => {
   let url = req.url.split('?')[0];
   if (url === '/') url = '/index.html';
 
+  // Decode URL-encoded characters (e.g. %20 for spaces in filenames)
+  url = decodeURIComponent(url);
+
   const filePath = join(DIST, url);
 
   // Prevent directory traversal
@@ -34,13 +39,18 @@ const server = createServer(async (req, res) => {
   }
 
   try {
-    const data = existsSync(filePath)
-      ? await readFile(filePath)
-      : await readFile(join(DIST, 'index.html'));
-
-    const ext = existsSync(filePath) ? extname(filePath) : '.html';
-    res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' });
-    res.end(data);
+    if (existsSync(filePath)) {
+      const data = await readFile(filePath);
+      const ext = extname(filePath);
+      res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' });
+      res.end(data);
+    } else {
+      // SPA fallback: serve index.html for non-file routes
+      const indexPath = join(DIST, 'index.html');
+      const data = await readFile(indexPath);
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(data);
+    }
   } catch {
     res.writeHead(404);
     res.end('Not Found');
@@ -48,5 +58,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Bip server running on port ${PORT}`);
+  console.log(`Bip server running on port ${PORT}, serving ${DIST}`);
 });
