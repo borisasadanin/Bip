@@ -47,23 +47,25 @@ export class GameScene extends Phaser.Scene {
     this.createTextures();
     this.createBackground();
 
+    // P1 = red plane, starts on the left, faces right
     this.plane1 = new Plane(
       this,
       CONFIG.DESIGN_WIDTH * CONFIG.SPAWN.PLANE_P1_X_RATIO,
       CONFIG.GROUND_Y - CONFIG.PLANE.HEIGHT * 0.5,
-      'plane-yellow',
-      -1,
-      180,
+      'plane-red-right',
+      1,
+      0,
       false
     );
 
+    // P2 = yellow plane, starts on the right, faces left
     this.plane2 = new Plane(
       this,
       CONFIG.DESIGN_WIDTH * CONFIG.SPAWN.PLANE_P2_X_RATIO,
       CONFIG.GROUND_Y - CONFIG.PLANE.HEIGHT * 0.5,
-      'plane-red-right',
-      1,
-      0,
+      'plane-yellow',
+      -1,
+      180,
       false
     );
 
@@ -128,18 +130,20 @@ export class GameScene extends Phaser.Scene {
     // Clamp delta to prevent physics overshoot on first frames after reload
     const dt = Math.min(delta / 1000, 1 / 30);
 
+    // P1 = red plane, WASD
     const input1: PlaneInput = {
-      up: Boolean(this.cursors.up?.isDown),
-      down: Boolean(this.cursors.down?.isDown),
-      left: Boolean(this.cursors.left?.isDown),
-      right: Boolean(this.cursors.right?.isDown)
-    };
-
-    const input2: PlaneInput = {
       up: Boolean(this.p2Keys.W?.isDown),
       down: Boolean(this.p2Keys.S?.isDown),
       left: Boolean(this.p2Keys.A?.isDown),
       right: Boolean(this.p2Keys.D?.isDown)
+    };
+
+    // P2 = yellow plane, Arrow keys
+    const input2: PlaneInput = {
+      up: Boolean(this.cursors.up?.isDown),
+      down: Boolean(this.cursors.down?.isDown),
+      left: Boolean(this.cursors.left?.isDown),
+      right: Boolean(this.cursors.right?.isDown)
     };
 
     this.plane1.setInCloud(false);
@@ -176,7 +180,7 @@ export class GameScene extends Phaser.Scene {
       const bulbR = balloon.displayWidth * CONFIG.BALLOON.BULB_RADIUS_RATIO;
       const bulbR2 = bulbR * bulbR;
 
-      // plane1 = yellow, right side = P2
+      // plane1 = red (P1), pops balloon → scores for P2
       if (this.plane1.state === 'FLYING' || this.plane1.state === 'STALLED') {
         const nose = this.plane1.getNosePosition();
         const dx = nose.x - bulbX;
@@ -191,7 +195,7 @@ export class GameScene extends Phaser.Scene {
         }
       }
 
-      // plane2 = red, left side = P1
+      // plane2 = yellow (P2), pops balloon → scores for P1
       if (this.plane2.state === 'FLYING' || this.plane2.state === 'STALLED') {
         const nose = this.plane2.getNosePosition();
         const dx = nose.x - bulbX;

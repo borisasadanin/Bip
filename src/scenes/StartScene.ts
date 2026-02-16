@@ -35,26 +35,9 @@ export class StartScene extends Phaser.Scene {
       strokeThickness: 3
     }).setOrigin(0.5);
 
-    // Player 1 controls
+    // Player 1 controls (red plane, left side, WASD)
     const p1Y = 320;
     this.add.text(cx - 200, p1Y, 'Player 1', {
-      fontFamily: '"Baloo 2", "Comic Sans MS", cursive',
-      fontSize: '32px',
-      color: '#FFA500',
-      stroke: '#0b1b3a',
-      strokeThickness: 4
-    }).setOrigin(0.5);
-
-    this.add.text(cx - 200, p1Y + 50, '\u2191 \u2193  Arrow Keys', {
-      fontFamily: '"Baloo 2", "Comic Sans MS", cursive',
-      fontSize: '24px',
-      color: '#ffffff',
-      stroke: '#0b1b3a',
-      strokeThickness: 3
-    }).setOrigin(0.5);
-
-    // Player 2 controls
-    this.add.text(cx + 200, p1Y, 'Player 2', {
       fontFamily: '"Baloo 2", "Comic Sans MS", cursive',
       fontSize: '32px',
       color: '#FF4444',
@@ -62,7 +45,24 @@ export class StartScene extends Phaser.Scene {
       strokeThickness: 4
     }).setOrigin(0.5);
 
-    this.add.text(cx + 200, p1Y + 50, 'W  S  Keys', {
+    this.add.text(cx - 200, p1Y + 50, 'W  S  Keys', {
+      fontFamily: '"Baloo 2", "Comic Sans MS", cursive',
+      fontSize: '24px',
+      color: '#ffffff',
+      stroke: '#0b1b3a',
+      strokeThickness: 3
+    }).setOrigin(0.5);
+
+    // Player 2 controls (yellow plane, right side, Arrow keys)
+    this.add.text(cx + 200, p1Y, 'Player 2', {
+      fontFamily: '"Baloo 2", "Comic Sans MS", cursive',
+      fontSize: '32px',
+      color: '#FFA500',
+      stroke: '#0b1b3a',
+      strokeThickness: 4
+    }).setOrigin(0.5);
+
+    this.add.text(cx + 200, p1Y + 50, '\u2191 \u2193  Arrow Keys', {
       fontFamily: '"Baloo 2", "Comic Sans MS", cursive',
       fontSize: '24px',
       color: '#ffffff',

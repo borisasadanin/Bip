@@ -90,8 +90,8 @@ export const CONFIG = {
     HITBOX_OFFSET_Y: 0
   },
   SPAWN: {
-    PLANE_P1_X_RATIO: 0.95,
-    PLANE_P2_X_RATIO: 0.05
+    PLANE_P1_X_RATIO: 0.05,
+    PLANE_P2_X_RATIO: 0.95
   },
   OBSTACLES: {
     HOUSE_WIDTH: 120,

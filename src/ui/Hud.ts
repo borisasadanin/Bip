@@ -17,11 +17,11 @@ export class Hud {
     };
 
     this.p1Text = scene.add
-      .text(CONFIG.UI.SCORE_MARGIN_X, CONFIG.UI.SCORE_MARGIN_Y, 'P1: 0', { ...baseStyle, color: '#FFA500' })
+      .text(CONFIG.UI.SCORE_MARGIN_X, CONFIG.UI.SCORE_MARGIN_Y, 'P1: 0', { ...baseStyle, color: '#FF4444' })
       .setDepth(CONFIG.DEPTH.HUD)
       .setScrollFactor(0);
     this.p2Text = scene.add
-      .text(CONFIG.DESIGN_WIDTH - CONFIG.UI.SCORE_MARGIN_X, CONFIG.UI.SCORE_MARGIN_Y, 'P2: 0', { ...baseStyle, color: '#FF4444' })
+      .text(CONFIG.DESIGN_WIDTH - CONFIG.UI.SCORE_MARGIN_X, CONFIG.UI.SCORE_MARGIN_Y, 'P2: 0', { ...baseStyle, color: '#FFA500' })
       .setOrigin(1, 0)
       .setDepth(CONFIG.DEPTH.HUD)
       .setScrollFactor(0);
