@@ -86,9 +86,12 @@ export class GameScene extends Phaser.Scene {
 
     // House collision via physics overlap
     this.physics.add.overlap(this.plane1, this.house, () => {
+      // NOTE(logic risk): this compares state using string literals, while Plane.state is actually a PlaneState enum.
+      // It works only because the enum values currently match these strings; future refactors/renames could break it silently.
       if (this.plane1.state !== 'CRASHED') this.plane1.crash();
     });
     this.physics.add.overlap(this.plane2, this.house, () => {
+      // NOTE(logic risk): same as above; prefer PlaneState.CRASHED, etc. to get type safety.
       if (this.plane2.state !== 'CRASHED') this.plane2.crash();
     });
 
@@ -121,6 +124,9 @@ export class GameScene extends Phaser.Scene {
     void time;
     if (this.isGameOver) {
       if (Phaser.Input.Keyboard.JustDown(this.restartKey)) {
+        // NOTE(logic risk): removeAllEvents() clears *all* timers/delayed calls created in this Scene.
+        // It's usually fine right before scene.restart(), but can become a maintenance hazard if you later add more
+        // timers (e.g. FX cleanup, animations, polling), or change to a "revive without restarting the Scene" flow.
         this.time.removeAllEvents();
         this.scene.restart();
       }
@@ -155,6 +161,7 @@ export class GameScene extends Phaser.Scene {
     // Plane-to-plane collision
     if (
       !this.isGameOver &&
+      // NOTE(logic risk): state is compared via strings (see notes above).
       this.plane1.state !== 'CRASHED' &&
       this.plane2.state !== 'CRASHED'
     ) {
@@ -181,6 +188,7 @@ export class GameScene extends Phaser.Scene {
       const bulbR2 = bulbR * bulbR;
 
       // plane1 = red (P1), pops balloon → scores for P2
+      // NOTE(logic risk): flight states are also checked via strings; consider PlaneState.FLYING / PlaneState.STALLED.
       if (this.plane1.state === 'FLYING' || this.plane1.state === 'STALLED') {
         const nose = this.plane1.getNosePosition();
         const dx = nose.x - bulbX;
@@ -196,6 +204,7 @@ export class GameScene extends Phaser.Scene {
       }
 
       // plane2 = yellow (P2), pops balloon → scores for P1
+      // NOTE(logic risk): same as above.
       if (this.plane2.state === 'FLYING' || this.plane2.state === 'STALLED') {
         const nose = this.plane2.getNosePosition();
         const dx = nose.x - bulbX;
@@ -227,12 +236,14 @@ export class GameScene extends Phaser.Scene {
           CONFIG.BIG_BALLOON.HITBOX_OFFSET_Y
         );
         if (
+          // NOTE(logic risk): GROUNDED/CRASHED are checked via strings here; prefer PlaneState for consistency.
           this.plane1.state !== 'GROUNDED' &&
           this.plane1.state !== 'CRASHED' &&
           Phaser.Geom.Intersects.RectangleToRectangle(p1Bounds, bigBounds)
         ) {
           this.plane1.crash();
         } else if (
+          // NOTE(logic risk): same as above.
           this.plane2.state !== 'GROUNDED' &&
           this.plane2.state !== 'CRASHED' &&
           Phaser.Geom.Intersects.RectangleToRectangle(p2Bounds, bigBounds)
@@ -369,6 +380,8 @@ export class GameScene extends Phaser.Scene {
 
   private scheduleBigBalloonSpawn() {
     this.bigBalloonTimer?.remove(false);
+    // NOTE(logic risk): big-balloon spawn delay reuses CONFIG.BALLOON spawn interval.
+    // If you want the big balloon to be rarer/more frequent independently, consider a dedicated BIG_BALLOON spawn range.
     const delay = Phaser.Math.Between(CONFIG.BALLOON.SPAWN_MIN_MS, CONFIG.BALLOON.SPAWN_MAX_MS);
 
     this.bigBalloonTimer = this.time.addEvent({

@@ -27,11 +27,18 @@ const server = createServer(async (req, res) => {
   if (url === '/') url = '/index.html';
 
   // Decode URL-encoded characters (e.g. %20 for spaces in filenames)
+  // NOTE(logic risk): decodeURIComponent will throw on malformed encodings (e.g. an incomplete %E0 sequence).
+  // This code does not handle that case explicitly, so it will fall through to the catch below and return 404.
+  // If you want clearer behavior, consider handling errors around this call more explicitly.
   url = decodeURIComponent(url);
 
   const filePath = join(DIST, url);
 
   // Prevent directory traversal
+  // NOTE(logic risk): using a string prefix check like filePath.startsWith(DIST) for directory traversal prevention
+  // can be unreliable across platforms / path normalization edge cases.
+  // A more robust approach is usually a semantic path check using resolve/relative (e.g. relative(DIST, resolved)
+  // does not start with '..').
   if (!filePath.startsWith(DIST)) {
     res.writeHead(403);
     res.end('Forbidden');
