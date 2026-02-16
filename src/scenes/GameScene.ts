@@ -7,6 +7,10 @@ import { Hud } from '../ui/Hud';
 import { clamp, lerp } from '../utils/math';
 
 export class GameScene extends Phaser.Scene {
+  constructor() {
+    super('GameScene');
+  }
+
   private plane1!: Plane;
   private plane2!: Plane;
   private balloons!: Phaser.Physics.Arcade.Group;
@@ -115,6 +119,7 @@ export class GameScene extends Phaser.Scene {
     void time;
     if (this.isGameOver) {
       if (Phaser.Input.Keyboard.JustDown(this.restartKey)) {
+        this.time.removeAllEvents();
         this.scene.restart();
       }
       return;
@@ -397,7 +402,6 @@ export class GameScene extends Phaser.Scene {
     bigBalloon.launch(vx, vy);
 
     this.bigBalloon = bigBalloon;
-    this.scheduleBigBalloonSpawn();
   }
 
   private getBalloonHitboxRect(

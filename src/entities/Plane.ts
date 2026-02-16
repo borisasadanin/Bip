@@ -39,6 +39,7 @@ export class Plane extends Phaser.Physics.Arcade.Sprite {
   private boostLocked = false;
 
   private propeller?: Phaser.GameObjects.Image;
+  private crashTimers: Phaser.Time.TimerEvent[] = [];
 
   constructor(
     scene: Phaser.Scene,
@@ -305,6 +306,8 @@ export class Plane extends Phaser.Physics.Arcade.Sprite {
   }
 
   destroy(fromScene?: boolean) {
+    this.crashTimers.forEach(t => t.remove(false));
+    this.crashTimers = [];
     this.propeller?.destroy();
     super.destroy(fromScene);
   }
@@ -316,7 +319,7 @@ export class Plane extends Phaser.Physics.Arcade.Sprite {
   }
 
   private enterStall() {
-    if (this.state === PlaneState.CRASHED) return;
+    if (this.state !== PlaneState.FLYING) return;
     this.state = PlaneState.STALLED;
     this.speed = 0;
     this.stallVelocityX = this.body.velocity.x;
@@ -401,13 +404,14 @@ export class Plane extends Phaser.Physics.Arcade.Sprite {
             timer.remove(false);
             landedCount += 1;
             piece.destroy();
-            this.scene.textures.remove(textureKey);
+            if (this.scene?.textures) this.scene.textures.remove(textureKey);
             if (landedCount >= slices) {
               onAllLanded();
             }
           }
         }
       });
+      this.crashTimers.push(timer);
     }
   }
 

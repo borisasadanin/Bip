@@ -70,6 +70,4 @@ export class Balloon extends Phaser.Physics.Arcade.Sprite {
     this.body.setCircle(radius);
     this.body.setOffset(offsetX, offsetY);
   }
-
-  static createTextures() {}
 }

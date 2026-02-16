@@ -9,20 +9,19 @@ export class Hud {
   private readonly overlayHint: Phaser.GameObjects.Text;
 
   constructor(scene: Phaser.Scene) {
-    const style: Phaser.Types.GameObjects.Text.TextStyle = {
+    const baseStyle: Phaser.Types.GameObjects.Text.TextStyle = {
       fontFamily: '"Baloo 2", "Comic Sans MS", cursive',
       fontSize: `${CONFIG.UI.SCORE_FONT_SIZE}px`,
-      color: '#ffffff',
       stroke: '#0b1b3a',
       strokeThickness: CONFIG.UI.TEXT_STROKE
     };
 
     this.p1Text = scene.add
-      .text(CONFIG.UI.SCORE_MARGIN_X, CONFIG.UI.SCORE_MARGIN_Y, 'P1: 0', style)
+      .text(CONFIG.UI.SCORE_MARGIN_X, CONFIG.UI.SCORE_MARGIN_Y, 'P1: 0', { ...baseStyle, color: '#FFA500' })
       .setDepth(CONFIG.DEPTH.HUD)
       .setScrollFactor(0);
     this.p2Text = scene.add
-      .text(CONFIG.DESIGN_WIDTH - CONFIG.UI.SCORE_MARGIN_X, CONFIG.UI.SCORE_MARGIN_Y, 'P2: 0', style)
+      .text(CONFIG.DESIGN_WIDTH - CONFIG.UI.SCORE_MARGIN_X, CONFIG.UI.SCORE_MARGIN_Y, 'P2: 0', { ...baseStyle, color: '#FF4444' })
       .setOrigin(1, 0)
       .setDepth(CONFIG.DEPTH.HUD)
       .setScrollFactor(0);

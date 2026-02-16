@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import './style.css';
+import { StartScene } from './scenes/StartScene';
 import { GameScene } from './scenes/GameScene';
 import { CONFIG } from './config';
 
@@ -26,7 +27,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
       debug: false
     }
   },
-  scene: [GameScene]
+  scene: [StartScene, GameScene]
 };
 
 new Phaser.Game(gameConfig);
